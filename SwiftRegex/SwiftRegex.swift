@@ -22,7 +22,7 @@ operator infix =~ {}
     let moptions = NSMatchingOptions(0)
     var matches : Array<String> = []
     re.enumerateMatchesInString(value, options: moptions, range: all) {
-        (result : NSTextCheckingResult!, flags : NSMatchingFlags, ptr : CMutablePointer<ObjCBool>) in
+        (result : NSTextCheckingResult!, flags : NSMatchingFlags, ptr : UnsafePointer<ObjCBool>) in
         let string = nsstr.substringWithRange(result.range)
         matches.append(string)
     }
@@ -33,7 +33,7 @@ struct RegexMatchCaptureGenerator : Generator {
     mutating func next() -> String? {
         if items.isEmpty { return nil }
         let ret = items[0]
-        items = items[1..items.count]
+        items = items[1..<items.count]
         return ret
     }
     var items: Slice<String>
@@ -42,7 +42,7 @@ struct RegexMatchCaptureGenerator : Generator {
 struct RegexMatchResult : Sequence, LogicValue {
     var items: Array<String>
     func generate() -> RegexMatchCaptureGenerator {
-        return RegexMatchCaptureGenerator(items: items[0..items.count])
+        return RegexMatchCaptureGenerator(items: items[0..<items.count])
     }
     func getLogicValue() -> Bool {
         return items.count > 0
