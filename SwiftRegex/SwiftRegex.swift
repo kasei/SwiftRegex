@@ -21,7 +21,7 @@ func =~ (value : String, pattern : String) -> RegexMatchResult {
     let all = NSRange(location: 0, length: nsstr.length)
     let moptions = NSMatchingOptions(0)
     var matches : Array<String> = []
-    re.enumerateMatchesInString(value, options: moptions, range: all) {
+    re!.enumerateMatchesInString(value, options: moptions, range: all) {
         (result : NSTextCheckingResult!, flags : NSMatchingFlags, ptr : UnsafeMutablePointer<ObjCBool>) in
         let string = nsstr.substringWithRange(result.range)
         matches.append(string)
