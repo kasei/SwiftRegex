@@ -11,32 +11,31 @@ import Foundation
 infix operator =~ {}
 
 func =~ (value : String, pattern : String) -> RegexMatchResult {
-    var err : NSError?
     let nsstr = value as NSString // we use this to access the NSString methods like .length and .substringWithRange(NSRange)
-    let options = NSRegularExpressionOptions(0)
-    let re = NSRegularExpression(pattern: pattern, options: options, error: &err)
-    if let e = err {
+    let options : NSRegularExpressionOptions = []
+    do {
+        let re = try  NSRegularExpression(pattern: pattern, options: options)
+        let all = NSRange(location: 0, length: nsstr.length)
+        var matches : Array<String> = []
+        re.enumerateMatchesInString(value, options: [], range: all) { (result, flags, ptr) -> Void in
+            guard let result = result else { return }
+            let string = nsstr.substringWithRange(result.range)
+            matches.append(string)
+        }
+        return RegexMatchResult(items: matches)
+    } catch {
         return RegexMatchResult(items: [])
     }
-    let all = NSRange(location: 0, length: nsstr.length)
-    let moptions = NSMatchingOptions(0)
-    var matches : Array<String> = []
-    re.enumerateMatchesInString(value, options: moptions, range: all) {
-        (result : NSTextCheckingResult!, flags : NSMatchingFlags, ptr : UnsafeMutablePointer<ObjCBool>) in
-        let string = nsstr.substringWithRange(result.range)
-        matches.append(string)
-    }
-    return RegexMatchResult(items: matches)
 }
 
 struct RegexMatchCaptureGenerator : GeneratorType {
+    var items: ArraySlice<String>
     mutating func next() -> String? {
         if items.isEmpty { return nil }
         let ret = items[0]
         items = items[1..<items.count]
         return ret
     }
-    var items: Slice<String>
 }
 
 struct RegexMatchResult : SequenceType, BooleanType {

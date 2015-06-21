@@ -8,8 +8,8 @@
 
 let value = "Hello, 火星, 🔥🌠!"
 let pattern = "[\\u6620-\\U0001F500]"
-println("string  : \(value)")
-println("pattern : \(pattern)")
+print("string  : \(value)")
+print("pattern : \(pattern)")
 for m in value =~ pattern {
-    println("matched pattern: \(m)")
+    print("matched pattern: \(m)")
 }

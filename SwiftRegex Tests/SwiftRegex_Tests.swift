@@ -46,7 +46,7 @@ class SwiftRegex_Tests: XCTestCase {
         let pattern2 = "[\\U0001F550-\\U0001FFFF]"
         var count = 0
         let matches = value =~ pattern
-        for m in matches {
+        for _ in matches {
             count++
         }
         XCTAssertEqual(count, 2, "count of range matches")
