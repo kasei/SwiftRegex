@@ -32,7 +32,7 @@ struct RegexMatchCaptureGenerator : GeneratorType {
     var items: ArraySlice<String>
     mutating func next() -> String? {
         if items.isEmpty { return nil }
-        let ret = items[0]
+        let ret = items[items.startIndex]
         items = items[1..<items.count]
         return ret
     }
