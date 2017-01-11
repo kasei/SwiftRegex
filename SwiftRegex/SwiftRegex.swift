@@ -8,18 +8,18 @@
 
 import Foundation
 
-infix operator =~ {}
+infix operator =~
 
 func =~ (value : String, pattern : String) -> RegexMatchResult {
     let nsstr = value as NSString // we use this to access the NSString methods like .length and .substringWithRange(NSRange)
-    let options : NSRegularExpressionOptions = []
+    let options : NSRegularExpression.Options = []
     do {
         let re = try  NSRegularExpression(pattern: pattern, options: options)
         let all = NSRange(location: 0, length: nsstr.length)
         var matches : Array<String> = []
-        re.enumerateMatchesInString(value, options: [], range: all) { (result, flags, ptr) -> Void in
+        re.enumerateMatches(in: value, options: [], range: all) { (result, flags, ptr) -> Void in
             guard let result = result else { return }
-            let string = nsstr.substringWithRange(result.range)
+            let string = nsstr.substring(with: result.range)
             matches.append(string)
         }
         return RegexMatchResult(items: matches)
@@ -28,7 +28,7 @@ func =~ (value : String, pattern : String) -> RegexMatchResult {
     }
 }
 
-struct RegexMatchCaptureGenerator : GeneratorType {
+struct RegexMatchCaptureGenerator : IteratorProtocol {
     var items: ArraySlice<String>
     mutating func next() -> String? {
         if items.isEmpty { return nil }
@@ -38,9 +38,9 @@ struct RegexMatchCaptureGenerator : GeneratorType {
     }
 }
 
-struct RegexMatchResult : SequenceType, BooleanType {
+struct RegexMatchResult : Sequence {
     var items: Array<String>
-    func generate() -> RegexMatchCaptureGenerator {
+    func makeIterator() -> RegexMatchCaptureGenerator {
         return RegexMatchCaptureGenerator(items: items[0..<items.count])
     }
     var boolValue: Bool {

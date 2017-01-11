@@ -21,23 +21,23 @@ class SwiftRegex_Tests: XCTestCase {
     }
     
     func testRegexLiterals() {
-        XCTAssert("abcdefg" =~ "abc", "match literal")
-        XCTAssertFalse("abcdefg" =~ "fgh", "match literal")
+        XCTAssert(("abcdefg" =~ "abc").boolValue, "match literal")
+        XCTAssertFalse(("abcdefg" =~ "fgh").boolValue, "match literal")
     }
     
     func testRegexWildcards() {
-        XCTAssert("abcdefg" =~ "a.c", "match dot")
-        XCTAssert("abcdefg" =~ "a.*b", "match dot star")
-        XCTAssert("abcdefg" =~ "a.*g", "match dot star")
-        XCTAssert("abcdefg" =~ "a.+g", "match dot plus")
-        XCTAssertFalse("abcdefg" =~ "a.+b", "match dot plus")
+        XCTAssert(("abcdefg" =~ "a.c").boolValue, "match dot")
+        XCTAssert(("abcdefg" =~ "a.*b").boolValue, "match dot star")
+        XCTAssert(("abcdefg" =~ "a.*g").boolValue, "match dot star")
+        XCTAssert(("abcdefg" =~ "a.+g").boolValue, "match dot plus")
+        XCTAssertFalse(("abcdefg" =~ "a.+b").boolValue, "match dot plus")
     }
     
     func testRegexAnchor() {
-        XCTAssert("abcdefg" =~ "^abc", "start anchor")
-        XCTAssertFalse("abcdefg" =~ "^efg", "start anchor")
-        XCTAssert("abcdefg" =~ "efg$", "end anchor")
-        XCTAssertFalse("abcdefg" =~ "abc$", "end anchor")
+        XCTAssert(("abcdefg" =~ "^abc").boolValue, "start anchor")
+        XCTAssertFalse(("abcdefg" =~ "^efg").boolValue, "start anchor")
+        XCTAssert(("abcdefg" =~ "efg$").boolValue, "end anchor")
+        XCTAssertFalse(("abcdefg" =~ "abc$").boolValue, "end anchor")
     }
     
     func testUnicodeRange() {
@@ -47,20 +47,13 @@ class SwiftRegex_Tests: XCTestCase {
         var count = 0
         let matches = value =~ pattern
         for _ in matches {
-            count++
+            count += 1
         }
         XCTAssertEqual(count, 2, "count of range matches")
         XCTAssertEqual(matches[0], "火", "match (1/2)")
         XCTAssertEqual(matches[1], "🌠", "match (2/2)")
 
-        XCTAssert(value =~ pattern, "LogicValue (1/2)")
-        XCTAssertFalse(value =~ pattern2, "LogicValue (1/2)")
+        XCTAssert((value =~ pattern).boolValue, "LogicValue (1/2)")
+        XCTAssertFalse((value =~ pattern2).boolValue, "LogicValue (1/2)")
     }
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock() {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
 }
